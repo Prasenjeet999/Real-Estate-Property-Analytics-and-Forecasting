@@ -1,0 +1,55 @@
+---
+title: "Getting Data"
+author: "Prasenjeet Gadhe"
+date: "2023-02-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+require(httr)
+
+headers = c(
+  `Accept` = 'application/json',
+  `apikey` = '	92af2972686bcdc1ca3d1a083ceb0ea1'
+)
+
+params = list(
+  `postalcode` = '80301',
+  #`city` = 'Boulder',
+  `pageSize` = '1000'
+)
+
+res <- httr::GET(url = 'https://api.gateway.attomdata.com/propertyapi/v1.0.0/assessment/detail', httr::add_headers(.headers=headers), query = params)
+```
+
+```{r}
+res$status_code
+```
+
+```{r}
+res$content
+```
+```{r}
+api_char <-  base::rawToChar(res$content)
+
+api_JSON <- jsonlite::fromJSON(api_char, flatten = TRUE)  # Taking a look at this just one moe time before storing it into a data frame
+
+api_JSON
+```
+```{r}
+df <- data.frame(api_JSON$property)
+```
+
+```{r}
+write.csv(df, 'C:/Users/jeetp/Desktop/Project/00ML/Attom_Data_80301.csv',na = '', row.names = F)
+```
+
+
+```{r}
+library(DataExplorer)
+DataExplorer::create_report(df)
+```
