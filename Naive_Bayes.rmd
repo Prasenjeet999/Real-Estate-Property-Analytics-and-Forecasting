@@ -1,0 +1,239 @@
+---
+title: "Naive_Bayes"
+author: "Nikhil_B M"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r}
+library(tidyverse)  # data manipulation and visualization
+library(modelr)     # provides easy pipeline modeling functions
+library(broom)      # helps to tidy up model outputs
+library(ggplot2)
+```
+
+```{r}
+library(naivebayes)
+#Loading required packages
+#install.packages('tidyverse')
+library(tidyverse)
+#install.packages('ggplot2')
+library(ggplot2)
+#install.packages('caret')
+#library(caret)
+#install.packages('caretEnsemble')
+#library(caretEnsemble)
+#install.packages('psych')
+library(psych)
+#install.packages('Amelia')
+#library(Amelia)
+#install.packages('mice')
+#library(mice)
+#install.packages('GGally')
+#library(GGally)
+library(e1071)
+```
+
+```{r}
+travel_data<-read.csv("House_Mixed_data.csv")
+head(travel_data)
+
+str(travel_data)
+
+#travel_data$total_amount = as.factor(travel_data$total_amount)
+
+str(travel_data)
+```
+
+```{r}
+StudentDataFile="House_Mixed_data.csv"
+head(StudentDF<-read.csv(StudentDataFile))
+```
+
+```{r}
+## Record Data..................
+## MAKE test and train data
+#(Size <- (as.integer(nrow(StudentDF)/4)))  ## Test will be 1/4 of the data
+#(SAMPLE <- sample(nrow(StudentDF), Size))
+
+#(DF_Test_Student<-StudentDF[SAMPLE, ])
+#(DF_Train_Student<-StudentDF[-SAMPLE, ])
+
+(Size <- (as.integer(nrow(travel_data)/4)))  ## Test will be 1/4 of the data
+(SAMPLE <- sample(nrow(travel_data), Size))
+
+(DF_Test_travel<-travel_data[SAMPLE, ])
+(DF_Train_travel<-travel_data[-SAMPLE, ])
+
+```
+
+Their- Decision is label Mine: total_amount
+
+```{r}
+##
+## REMOVE the labels and KEEP THEM
+##   
+## 
+#str(DF_Test_Student$Decision)  ## Notice that the label is called "Decision" and
+## is correctly set to type FACTOR. This is IMPORTANT!!
+#str(DF_Train_Student$Decision)  ## GOOD! Here "Decision" is also type FACTOR
+##Check balance of test dataset
+#table(DF_Test_Student$Decision)
+
+#typeof(DF_Test_travel)
+
+str(DF_Test_travel$MSZoning)  ## Notice that the label is called "total_amount" and
+## is correctly set to type FACTOR. This is IMPORTANT!!
+str(DF_Train_travel$MSZoning)  ## GOOD! Here "total_amount" is also type FACTOR 
+##Check balance of test dataset
+table(DF_Test_travel$MSZoning)
+
+```
+
+```{r}
+
+##################################### REMOVE AND SAVE LABELS...
+## Copy the Labels
+(DF_Test_travel_Labels <- DF_Test_travel$total_amount)
+## Remove the labels
+DF_Test_travel_NL<-DF_Test_travel[ , -which(names(DF_Test_travel) %in% c("total_amount"))]
+#(DF_Test_travel_NL[1:5, 1:5])
+## Check size
+(ncol(DF_Test_travel_NL))
+#(DF_Test_Student_NL)
+## Train...--------------------------------
+## Copy the Labels
+(DF_Train_travel_Labels <- DF_Train_travel$total_amount)
+## Remove the labels
+DF_Train_travel_NL<-DF_Train_travel[ , -which(names(DF_Train_travel) %in% c("total_amount"))]
+#(DF_Train_travel_NL[1:5, 1:5])
+## Check size
+(ncol(DF_Train_travel_NL))
+#(DF_Train_Student_NL)
+
+
+
+
+```
+
+```{r}
+##############################################################
+##
+##                         NAIVE BAYES
+##
+###############################################################
+
+## ----------------------------
+## For Record data, we have:
+##-----------------------------
+## DF_Test_Student_NL  ## Testset
+## DF_Train_Student_NL  ## Training set
+## Label name is "Decision"
+## Test labels:
+## DF_Test_Student_Labels
+## DF_Train_Student_Labels
+######################################
+
+## Just FYI......................if memory or overflow issues....
+## memory.limit()
+#data=DF_Train[,1:5000]
+#(data[1:5, 1:5])
+##
+
+
+##########################################################
+## Record Data----------------------------
+#######################################################
+(NB_e1071_travel_with_laplace<-naiveBayes(DF_Train_travel_NL, DF_Train_travel_Labels, laplace = 1))
+NB_e1071_Pred_travel_with_laplace <- predict(NB_e1071_travel_with_laplace, DF_Test_travel_NL)
+(NB_e1071_Pred_travel_with_laplace)
+
+
+
+(NB_e1071_travel_without_laplace<-naiveBayes(DF_Train_travel_NL, DF_Train_travel_Labels, laplace = 0))
+NB_e1071_Pred_travel_without_laplace <- predict(NB_e1071_travel_without_laplace, DF_Test_travel_NL)
+(NB_e1071_Pred_travel_without_laplace)
+```
+
+With-out Laplace:
+
+Frequency distribution of the prediction:
+
+```{r}
+plot(NB_e1071_Pred_travel_without_laplace)
+```
+
+Train - Confusion Matrix and Accuracy
+
+```{r}
+#Confusion Matrix
+NB_e1071_Pred_travel_train_without_laplace <- predict(NB_e1071_travel_without_laplace, DF_Train_travel_NL)
+(tab1_without_laplace <- table(NB_e1071_Pred_travel_train_without_laplace,DF_Train_travel_Labels))
+```
+
+```{r}
+(Tain_error_without_laplace <- 1 - sum(diag(tab1_without_laplace)) / sum(tab1_without_laplace))
+(Tain_accuracy_without_laplace <- (1- Tain_error_without_laplace) * 100 )
+```
+
+Misclassification is around 12.4%. Training model accuracy is around 87.6%.
+
+Test - Confusion Matrix and Accuracy
+
+```{r}
+#Confusion Matrix
+NB_e1071_Pred_travel_without_laplace <- predict(NB_e1071_travel_without_laplace, DF_Test_travel_NL)
+(tab2_without_laplace <- table(NB_e1071_Pred_travel_without_laplace,DF_Test_travel_Labels))
+```
+
+```{r}
+(Test_error_without_laplace <- 1 - sum(diag(tab2_without_laplace)) / sum(tab2_without_laplace))
+(Test_accuracy_without_laplace <- (1- Test_error_without_laplace) * 100 )
+```
+
+Misclassification is around 11.8%. Training model accuracy is around 88.2%.
+
+------------------------------------------------------------------------
+
+With Laplace:
+
+Frequency distribution of the prediction:
+
+```{r}
+plot(NB_e1071_Pred_travel_with_laplace)
+```
+
+Train - Confusion Matrix and Accuracy
+
+```{r}
+#Confusion Matrix
+NB_e1071_Pred_travel_train_with_laplace <- predict(NB_e1071_travel_with_laplace, DF_Train_travel_NL)
+(tab1_with_laplace <- table(NB_e1071_Pred_travel_train_with_laplace,DF_Train_travel_Labels))
+```
+
+```{r}
+(Tain_error_with_laplace <- 1 - sum(diag(tab1_with_laplace)) / sum(tab1_with_laplace))
+(Tain_accuracy_with_laplace <- (1- Tain_error_with_laplace) * 100 )
+```
+
+Misclassification is around 12.4%. Training model accuracy is around 87.6%.
+
+Test - Confusion Matrix and Accuracy
+
+```{r}
+#Confusion Matrix
+NB_e1071_Pred_travel_with_laplace <- predict(NB_e1071_travel_with_laplace, DF_Test_travel_NL)
+(tab2_with_laplace <- table(NB_e1071_Pred_travel_with_laplace,DF_Test_travel_Labels))
+```
+
+```{r}
+(Test_error_with_laplace <- 1 - sum(diag(tab2_with_laplace)) / sum(tab2_with_laplace))
+(Test_accuracy_with_laplace <- (1- Test_error_with_laplace) * 100 )
+```
+
+Misclassification is around 11.8%. Training model accuracy is around 88.2%.
