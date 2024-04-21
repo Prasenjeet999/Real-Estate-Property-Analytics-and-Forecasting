@@ -1,5 +1,7 @@
 # Real Estate Property Analytics and Forecasting
 
+[Website Link](https://sites.google.com/d/1qXmN7RujdmV4Zqwuq-ZmpXlK61VMEsRR/p/10VS1NqGIeylRz5HI1RDHO_IUe7wi_C9D/edit)
+
 ## Introduction
 
 In an ever-evolving global economy, the real estate industry stands as a pivotal sector, witnessing fluctuating dynamics influenced by various factors. This project, "Real Estate Property Analytics and Forecasting," is conceived to leverage big data and advanced analytics, aiming to predict real estate trends and prices. Through comprehensive data analysis from big real estate companies and publicly available sources, we strive to develop a robust model that forecasts real estate price movements, aiding stakeholders in making informed decisions.
@@ -57,15 +59,7 @@ Our model, combined with economic indicators, offers an overview of the current 
 
 By harnessing data analytics and machine learning, "Real Estate Property Analytics and Forecasting" aims to illuminate the path for the future of real estate decision-making. This project not only contributes to the academic field but also provides practical tools for industry professionals to forecast and strategize.
 
-## Contact
-
-For more information or queries, feel free to reach out:
-
-- Prasenjeet Gadhe
-- Email: prasenjeet.gadhe@colorado.edu
-- Location: Boulder, CO
 
 ---
 
-[Website Link](https://sites.google.com/d/1qXmN7RujdmV4Zqwuq-ZmpXlK61VMEsRR/p/10VS1NqGIeylRz5HI1RDHO_IUe7wi_C9D/edit)
 
