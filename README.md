@@ -1,6 +1,6 @@
 # Real Estate Property Analytics and Forecasting
 
-[Website Link](https://sites.google.com/d/1qXmN7RujdmV4Zqwuq-ZmpXlK61VMEsRR/p/10VS1NqGIeylRz5HI1RDHO_IUe7wi_C9D/edit)
+[Website Link](https://sites.google.com/view/real-estate-analytic/introduction)
 
 ## Introduction
 
